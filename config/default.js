@@ -8,72 +8,72 @@ module.exports = {
     /***************************************************************
     * Node Scripts
     ***************************************************************/
-  'api-server': {
+    "api-server": {
 
         //White-list of domains allowed to access our resources.
-    cors: {
-      acceptAll: false
-    },
+        cors: {
+            acceptAll: false
+        },
 
         //Plain-text HTTP server configuration.
-    http: {
-      enabled: true,
-      host: '0.0.0.0',
-      port: 3000
-    },
+        http: {
+            enabled: true,
+            host: "0.0.0.0",
+            port: 3000
+        },
 
         //Encrypted HTTP server configuration.
-    https: {
-      enabled: false,
-      host: '0.0.0.0',
-      port: 3443,
-      key: null,
-      cert: null
+        https: {
+            enabled: false,
+            host: "0.0.0.0",
+            port: 3443,
+            key: null,
+            cert: null
+        },
+
+        path: {
+            auth: "/auth",
+            accounts: "/accounts"
+        }
     },
 
-    path: {
-      auth: '/auth',
-      accounts: '/accounts'
-    }
-  },
+    "socket-server": {
+        port: 3001
+    },
 
-  'socket-server': {
-    port: 3001
-  },
-
-  'init': {
-    directory: `${__dirname}/../serve/initialization/data`
-  },
+    "init": {
+        directory: `${__dirname}/../serve/initialization/data`
+    },
 
     /***************************************************************
     * Security
     ***************************************************************/
-  'security': {
+    "security": {
 
         //Please configure the secret on your deployment server. Every instance
         //must have the same secret, but the secret should not be comitted.
-    secret: null,
+        secret: null,
 
         //Please note that the token-life also determines the time it takes for
         //changes in user-permissions to be propagated.
-    tokenLife: 21600000,
+        tokenLife: 21600000,
         /*6 hours*/
-    refreshLife: 1209600000 /*14 days*/
+        refreshLife: 1209600000 /*14 days*/
 
-  },
+    },
 
     /***************************************************************
     * Database
     ***************************************************************/
-  'mongodb': {
-    database: null
-  },
+    "mongodb": {
+        database: null
+    },
 
     /***************************************************************
     * Tests
     ***************************************************************/
-  'test': {
-    email: 'test@test.com',
-    password: '123456qwerty'
-  }
+    "test": {
+        email: "test@test.com",
+        password: "123456qwerty"
+    }
 };

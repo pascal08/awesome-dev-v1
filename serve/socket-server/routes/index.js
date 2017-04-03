@@ -1,7 +1,7 @@
 "use strict";
 
-const User = require("./../actions/user");
-const Room = require("./../actions/room");
+const User = require("./../controllers/user");
+const Room = require("./../controllers/room");
 const socketRoute = require("./../utilities/socket-route");
 
 module.exports = (socket, req) => {
