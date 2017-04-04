@@ -2,18 +2,19 @@
 
 const User = require("./../controllers/user");
 const Room = require("./../controllers/room");
-const socketRoute = require("./../utilities/socket-route");
+const socketApp = require("./../utilities/socket-app");
 
 module.exports = (req, res) => {
-    const route = socketRoute(req, res);
+    const app = socketApp(req, res);
+    app.use("sent", require("./../utilities/sent"));
 
     User.init(req, res);
     Room.join(req, res, "general");
 
-    route.add("user.update", function(req,res, next){ console.log('Middleware test');next();}, User.update)
-        .add("room.join",Room.join)
-        .add("room.leave", Room.leave)
-        .add("disconnect", Room.leave)
+    app.route("user.update", User.update)
+        .route("room.join", Room.join)
+        .route("room.leave", Room.leave)
+        .route("disconnect", Room.leave)
 
     return req;
 };

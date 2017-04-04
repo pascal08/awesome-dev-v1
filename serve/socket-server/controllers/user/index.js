@@ -23,7 +23,6 @@ module.exports = {
         if (typeof props !== "object") {
             return console.error("user.update value should be an object, is ", props, req.body);
         }
-
         _.each(props, (value, key) => {
             if (key == "room") {
                 return;

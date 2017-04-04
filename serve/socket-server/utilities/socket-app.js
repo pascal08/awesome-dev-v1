@@ -1,12 +1,16 @@
 "use strict";
-const sent = require("./sent");
 
 module.exports = (req, res) => {
-    req.sent = sent(req, res);
     return {
         req: req,
         res: res,
-        add: function(routeName, ...args) {
+        use: (name, fn) => {
+            if (typeof this[name] !== "undefined") {
+                return console.error("You can only set a property once");
+            }
+            req[name] = fn(req, res);
+        },
+        route: function(routeName, ...args) {
             let index = 0;
             const next = () => {
                 if (typeof args[index] !== "function") {
@@ -16,8 +20,6 @@ module.exports = (req, res) => {
                 args[index-1](this.req, this.res, next);
             };
 
-
-            // console.log(this.req.on);
             this.req.on( routeName, value => {
                 this.req.body = value;
                 index = 0;
