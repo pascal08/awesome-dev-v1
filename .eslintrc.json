@@ -20,7 +20,6 @@
      "no-warning-comments": [1, {"terms": ["todo", "tmp", "temp", "temporary", "fixme"]}],
      "no-sync": [1],
      "indent": ["error", 4],
-     "arrow-body-style": [2, "as-needed"],
      "arrow-parens": [2, "as-needed"],
      "constructor-super": [2],
      "no-duplicate-imports": [2],
