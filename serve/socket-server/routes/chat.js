@@ -2,24 +2,24 @@
 
 const socketIoHelper = require("./../../utilities/socket-io-helper");
 
-module.exports = (socket, req) => {
-    const helper = socketIoHelper(socket);
+module.exports = (req, res) => {
+    const helper = socketIoHelper(req);
 
     // when the client emits 'typing', we broadcast it to others
-    socket.on("typing", () => {
+    req.on("typing", () => {
         helper.toOthers("typing", {
-            user: socket.user
+            user: req.user
         });
     });
 
     // when the client emits 'stop typing', we broadcast it to others
-    socket.on("stop typing", () => {
+    req.on("stop typing", () => {
         helper.toOthers("stop typing", {
-            user: socket.user
+            user: req.user
         });
     });
 
-    socket.on("user.sent.message", message => {
+    req.on("user.sent.message", message => {
         // Input is not a string, do nothing
         if (typeof message !== "string") {
             return;
@@ -34,14 +34,14 @@ module.exports = (socket, req) => {
 
         // Send message
         helper.toOthers("user.receive.message", {
-            user: socket.user,
-            users: req.users,
+            req: req.user,
+            users: res.users,
             message: message
         });
     });
 
 
-    socket.on("user.start.typing", () => {
+    req.on("user.start.typing", () => {
         // If user object is null, request new user object and retry
         if (!helper.validateConnection({
             "user.start.typing": ""
@@ -51,11 +51,11 @@ module.exports = (socket, req) => {
 
         // Send message
         helper.toOthers("user.started.typing", {
-            user: socket.user
+            user: req.user
         });
     });
 
-    socket.on("user.stop.typing", () => {
+    req.on("user.stop.typing", () => {
         // If user object is null, request new user object and retry
         if (!helper.validateConnection({
             "user.start.typing": ""
@@ -65,7 +65,7 @@ module.exports = (socket, req) => {
 
         // Send message
         helper.toOthers("user.stopped.typing", {
-            user: socket.user
+            user: req.user
         });
     });
 };

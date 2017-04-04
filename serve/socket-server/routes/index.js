@@ -4,11 +4,11 @@ const User = require("./../controllers/user");
 const Room = require("./../controllers/room");
 const socketRoute = require("./../utilities/socket-route");
 
-module.exports = (socket, req) => {
-    const route = socketRoute(socket, req);
+module.exports = (req, res) => {
+    const route = socketRoute(req, res);
 
-    User.init(socket, req);
-    Room.join(socket, req, "general");
+    User.init(req, res);
+    Room.join(req, res, "general");
 
     route.add("user.update", User.update)
         .add("room.join", Room.join)

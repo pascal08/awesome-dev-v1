@@ -5,39 +5,39 @@ const _ = require("lodash");
 const getuserObj = requireUtility("get-user-object");
 
 module.exports = {
-    join: (socket, req, roomName) => {
+    join: (req, res, roomName) => {
 
-        if (typeof req.users !== "object") {
-            return console.error("users collection is not defined", req.users);
+        if (typeof res.users !== "object") {
+            return console.error("users collection is not defined", res.users);
         }
 
-        if (typeof req.users[socket.id] !== "object") {
-            return console.error(`User with id ${socket.id} needs to be an object`, req.users[socket.id]);
+        if (typeof res.users[req.id] !== "object") {
+            return console.error(`User with id ${req.id} needs to be an object`, res.users[req.id]);
         }
 
-        req.users[socket.id].room = roomName;
+        res.users[req.id].room = roomName;
 
-        const userObj = _.pick(getuserObj(socket, req), ["socketId", "room"]);
+        const userObj = _.pick(getuserObj(req, res), ["socketId", "room"]);
 
-        socket.sent.toSelf("room.current", userObj);
+        req.sent.toSelf("room.current", userObj);
 
         return this;
     },
-    leave: (socket, req) => {
-        const users = req.users;
-        const user = users[socket.id];
+    leave: (req, res) => {
+        const users = res.users;
+        const user = users[req.id];
 
         if (user) {
             // Notify others
-            socket.sent.toOthers("user.left", {
+            req.sent.toOthers("user.left", {
                 user: user,
                 users: _(users).filter({
-                    room: socket.room
+                    room: req.room
                 })
             });
 
             // Remove socket user from users list
-            delete users[socket.id];
+            delete users[req.id];
         }
         return this;
     }

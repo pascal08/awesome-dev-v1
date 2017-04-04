@@ -7,32 +7,33 @@ const _ = require("lodash");
 const getuserObj = requireUtility("get-user-object");
 
 module.exports = {
-    init: (socket, req) => {
+    init: (req, res) => {
 
-        if (typeof req.users !== "object") {
-            req.users = {};
+        if (typeof res.users !== "object") {
+            res.users = {};
         }
 
         // Add user
-        req.users[socket.id] = {};
+        res.users[req.id] = {};
     },
-    update: (socket, req, value) => {
-        const props = jsonic(value);
+    update: (req, res) => {
+
+        const props = jsonic(req.body);
 
         if (typeof props !== "object") {
-            return console.error("user.update value should be an object, is ", props, value);
+            return console.error("user.update value should be an object, is ", props, req.body);
         }
 
         _.each(props, (value, key) => {
             if (key == "room") {
                 return;
             }
-            req.users[socket.id][key] = value;
+            res.users[req.id][key] = value;
         });
 
 
-        const userObj = _.omit(getuserObj(socket, req), ["room"]);
+        const userObj = _.omit(getuserObj(req, res), ["room"]);
 
-        socket.sent.toSelf("user.current", userObj)
+        req.sent.toSelf("user.current", userObj)
     }
 };

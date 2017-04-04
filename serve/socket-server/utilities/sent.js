@@ -1,26 +1,24 @@
 "use strict";
 
-const _ = require("lodash"),
-    Config = require("config"),
-    io = require("socket.io")(Config["socket-server"].port);
+const _ = require("lodash");
 
-module.exports = (socket, req) => ({
+module.exports = (req, res) => ({
     // To self
     toSelf: (path, data) => {
-        socket.emit(path, data);
+        req.emit(path, data);
     },
     // To others
     toOthers: (path, data) => {
-        const currentRoom = req.users[socket.id].room;
-        socket.broadcast.to(currentRoom).emit(path, _.merge({
+        const currentRoom = res.users[req.id].room;
+        req.broadcast.to(currentRoom).emit(path, _.merge({
             room: currentRoom
         }, data));
     },
     // To others & self
     toEveryone: (path, data) => {
-        const currentRoom = req.users[socket.id].room;
-        io.sockets.in(currentRoom).emit(path, _.merge({
-            room: socket.room
+        const currentRoom = res.users[req.id].room;
+        req.in(currentRoom).emit(path, _.merge({
+            room: req.room
         }, data));
     }
 });

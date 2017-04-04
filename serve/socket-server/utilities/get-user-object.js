@@ -2,7 +2,7 @@
 
 const _ = require("lodash");
 
-module.exports = (socket, req) => _.merge(
-    { socketId: socket.id },  // This is for dev/bugfixing only
-    req.users[socket.id]
+module.exports = (req, res) => _.merge(
+    { socketId: req.id },  // This is for dev/bugfixing only
+    res.users[req.id]
 )
