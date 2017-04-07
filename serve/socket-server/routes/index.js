@@ -2,6 +2,7 @@
 
 const User = require("./../controllers/user");
 const Room = require("./../controllers/room");
+const testRoutes = require("./test");
 const socketApp = require("./../utilities/socket-app");
 
 module.exports = (req, res) => {
@@ -16,5 +17,6 @@ module.exports = (req, res) => {
         .route("room.leave", Room.leave)
         .route("disconnect", Room.leave)
 
+    testRoutes(app);
     return req;
 };
