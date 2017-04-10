@@ -301,7 +301,7 @@ describe("toEveryoneInRoom", () => {
     const path = "toEveryoneInRoom";
 
     // User A
-    it(`userA should receive a message when userA sends a message to the "${path}" endpoint, in room ${roomA}`, () => {
+    it(`userA should receive a message when userA sends a message to the "${path}" endpoint, in ${roomA}`, () => {
         clientSocketA.emit(path, roomA);
         return new Promise((resolve, reject) => {
             clientSocketA.on(`${path}.success`, content => {
@@ -315,7 +315,7 @@ describe("toEveryoneInRoom", () => {
     });
 
     // User B
-    it(`userB should NOT receive a message when userA sends a message to the "${path}" endpoint, in room ${roomA}`, () => {
+    it(`userB should NOT receive a message when userA sends a message to the "${path}" endpoint, in ${roomA}`, () => {
         clientSocketA.emit(path, roomA);
         return new Promise((resolve, reject) => {
             clientSocketB.on(`${path}.success`, content => {
@@ -328,16 +328,30 @@ describe("toEveryoneInRoom", () => {
         })
     });
 
-    // User C
-    it(`userC should NOT receive a message when userA sends a message to the "${path}" endpoint, in room ${roomA}`, () => {
-        clientSocketA.emit(path, roomA);
+    it(`userB should move to room ${roomA}`, () => {
+        clientSocketB.emit("room.join", roomA);
         return new Promise((resolve, reject) => {
-            clientSocketC.on(`${path}.success`, content => {
-                reject(content)
+            clientSocketB.on(`room.current`, content => {
+                if (content === roomA) {
+                    resolve(content)
+                }
             });
 
             setTimeout(() => {
-                resolve(true);
+                reject(true);
+            }, 300)
+        })
+    });
+
+    it(`userB should receive a message when userA sends a message to the "${path}" endpoint, in ${roomA}`, () => {
+        clientSocketA.emit(path, roomA);
+        return new Promise((resolve, reject) => {
+            clientSocketB.on(`${path}.success`, content => {
+                resolve(content);
+            });
+
+            setTimeout(() => {
+                reject(false)
             }, 300)
         })
     });
