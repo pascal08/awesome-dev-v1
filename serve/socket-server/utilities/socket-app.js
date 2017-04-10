@@ -1,15 +1,15 @@
 "use strict";
 
-module.exports = (req, res, nsp) => {
+module.exports = (socket, res, nsp) => {
     return {
-        req: req,
+        socket: socket,
         res: res,
         namespace: nsp,
         use: (name, fn) => {
             if (typeof this[name] !== "undefined") {
                 return console.error("You can only set a property once");
             }
-            req[name] = fn(req, res);
+            socket[name] = fn(socket, res, nsp);
         },
         route: function(routeName, ...args) {
             let index = 0;
@@ -18,11 +18,11 @@ module.exports = (req, res, nsp) => {
                     return;
                 }
                 index++;
-                args[index-1](this.req, this.res, next);
+                args[index-1](this.socket, this.res, next);
             };
 
-            this.req.on( routeName, value => {
-                this.req.body = value;
+            this.socket.on( routeName, value => {
+                this.socket.body = value;
                 index = 0;
                 next();
             });

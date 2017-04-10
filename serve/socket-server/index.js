@@ -19,8 +19,7 @@ const defaultNamespace = io.of("/").on("connection", socket => {
         ioObject["/"] = {};
     }
 
-    const app = socketApp(socket, ioObject["/"], defaultNamespace);
-    coreRoutes(app)
+    coreRoutes(socketApp(socket, ioObject["/"], defaultNamespace))
 });
 
 const testNamespace = io.of(Config["socket-server"].testPath).on("connection", socket => {
@@ -28,6 +27,5 @@ const testNamespace = io.of(Config["socket-server"].testPath).on("connection", s
         ioObject[Config["socket-server"].testPath] = {};
     }
 
-    const app = socketApp(socket, ioObject[Config["socket-server"].testPath], testNamespace);
-    testRoutes(app);
+    testRoutes(socketApp(socket, ioObject[Config["socket-server"].testPath], testNamespace));
 });
