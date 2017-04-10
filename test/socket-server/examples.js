@@ -7,7 +7,9 @@ let clientSocketA = {}; // on 'Config.socket-server.testPath' namespace, room: "
 let clientSocketB = {}; // on 'Config.socket-server.testPath' namespace, room: "B"
 let clientSocketC = {}; // on '/' namespace, room: "C"
 
-
+let roomA = "";
+let roomB = "";
+let roomC = "";
 
 ////////////////////////////////////////////////////////////////////////////
 // Connection
@@ -79,13 +81,15 @@ describe("Connection", () => {
 
 describe("Setting up rooms", () => {
     const path = "room.join";
-    let data = "room.a";
+    roomA = "room.a";
+    roomB = "room.b";
+    roomC = "room.c";
 
-    it(`userA should move to '${data}' when triggering '${path}' event`, () => {
-        clientSocketA.emit(path, data);
+    it(`userA should move to '${roomA}' when triggering '${path}' event`, () => {
+        clientSocketA.emit(path, roomA);
         return new Promise((resolve, reject) => {
             clientSocketA.on(`room.current`, content => {
-                if (content === data) {
+                if (content === roomA) {
                     resolve(content)
                 }
             });
@@ -96,12 +100,11 @@ describe("Setting up rooms", () => {
         })
     });
 
-    data = "room.b";
-    it(`userB should move to '${data}' when triggering '${path}' event`, () => {
-        clientSocketB.emit(path, data);
+    it(`userB should move to '${roomB}' when triggering '${path}' event`, () => {
+        clientSocketB.emit(path, roomB);
         return new Promise((resolve, reject) => {
             clientSocketB.on(`room.current`, content => {
-                if (content === data) {
+                if (content === roomB) {
                     resolve(content)
                 }
             });
@@ -112,12 +115,11 @@ describe("Setting up rooms", () => {
         })
     });
 
-    data = "room.c";
-    it(`userC should move to '${data}' when triggering '${path}' event`, () => {
-        clientSocketC.emit(path, data);
+    it(`userC should move to '${roomC}' when triggering '${path}' event`, () => {
+        clientSocketC.emit(path, roomC);
         return new Promise((resolve, reject) => {
             clientSocketC.on(`room.current`, content => {
-                if (content === data) {
+                if (content === roomC) {
                     resolve(content)
                 }
             });
@@ -248,7 +250,7 @@ describe("toEveryone", () => {
     const data = "test-message";
 
     // User A
-    it(`userA should receive a message when userA sends a message to the "toEveryone" endpoint`, () => {
+    it(`userA should receive a message when userA sends a message to the "${path}" endpoint`, () => {
         clientSocketA.emit(path, data);
         return new Promise((resolve, reject) => {
             clientSocketA.on(`${path}.success`, content => {
@@ -262,7 +264,7 @@ describe("toEveryone", () => {
     });
 
     // User B
-    it(`userB should receive a message when userA sends a message to the "toEveryone" endpoint`, () => {
+    it(`userB should receive a message when userA sends a message to the "${path}" endpoint`, () => {
         clientSocketA.emit(path, data);
         return new Promise((resolve, reject) => {
             clientSocketB.on(`${path}.success`, content => {
@@ -276,8 +278,59 @@ describe("toEveryone", () => {
     });
 
     // User C
-    it(`userC should NOT receive a message when userA sends a message to the "toEveryone" endpoint`, () => {
+    it(`userC should NOT receive a message when userA sends a message to the "${path}" endpoint`, () => {
         clientSocketA.emit(path, data);
+        return new Promise((resolve, reject) => {
+            clientSocketC.on(`${path}.success`, content => {
+                reject(content)
+            });
+
+            setTimeout(() => {
+                resolve(true);
+            }, 300)
+        })
+    });
+});
+
+
+////////////////////////////////////////////////////////////////////////////
+// To Everyone (within the same room)
+////////////////////////////////////////////////////////////////////////////
+
+describe("toEveryoneInRoom", () => {
+    const path = "toEveryoneInRoom";
+
+    // User A
+    it(`userA should receive a message when userA sends a message to the "${path}" endpoint, in room ${roomA}`, () => {
+        clientSocketA.emit(path, roomA);
+        return new Promise((resolve, reject) => {
+            clientSocketA.on(`${path}.success`, content => {
+                resolve(content.indexOf(roomA) !== -1);
+            });
+
+            setTimeout(() => {
+                reject(false);
+            }, 300)
+        })
+    });
+
+    // User B
+    it(`userB should NOT receive a message when userA sends a message to the "${path}" endpoint, in room ${roomA}`, () => {
+        clientSocketA.emit(path, roomA);
+        return new Promise((resolve, reject) => {
+            clientSocketB.on(`${path}.success`, content => {
+                reject(content);
+            });
+
+            setTimeout(() => {
+                resolve(false)
+            }, 300)
+        })
+    });
+
+    // User C
+    it(`userC should NOT receive a message when userA sends a message to the "${path}" endpoint, in room ${roomA}`, () => {
+        clientSocketA.emit(path, roomA);
         return new Promise((resolve, reject) => {
             clientSocketC.on(`${path}.success`, content => {
                 reject(content)

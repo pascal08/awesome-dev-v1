@@ -18,8 +18,8 @@ module.exports = app => {
     });
 
     // To everyone (within the same room)
-    app.route("toEveryoneInRoom", (socket, res) => {
-        app.namespace.in(res.room).emit("toEveryoneInRoom.success", socket.body);
+    app.route("toEveryoneInRoom", socket => {
+        app.namespace.in(socket.body).emit("toEveryoneInRoom.success", `Sending message to everyone in room ${socket.body}`);
     });
 
     // To others (within the same room)
