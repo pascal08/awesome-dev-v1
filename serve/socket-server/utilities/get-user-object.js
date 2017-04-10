@@ -3,11 +3,12 @@
 const _ = require("lodash");
 
 module.exports = (req, res) => {
-    if (process.env.NODE_ENV === "development") {
-        return _.merge(
-            { socketId: req.id },  // This is for dev/bugfixing only
-            res.users[req.id]
-        );
+    let result = {};
+    if (req.users) {
+        result = _.merge(result, res.users[req.id]);
     }
-    return res.users[req.id];
+    if (process.env.NODE_ENV === "development") {
+        result = _.merge(result, { socketId: req.id });
+    }
+    return result;
 }

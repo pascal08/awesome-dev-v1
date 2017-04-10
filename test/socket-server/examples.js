@@ -72,6 +72,57 @@ describe("Connection", () => {
 
 
 
+describe("Setting up rooms", () => {
+    const path = "room.join";
+    let data = "room.a";
+
+    it(`userA should move to '${data}' when triggering '${path}' event`, () => {
+        clientSocketA.emit(path, data);
+        return new Promise((resolve, reject) => {
+            clientSocketA.on(`room.current`, content => {
+                if (content === data) {
+                    resolve(content)
+                }
+            });
+
+            setTimeout(() => {
+                reject(false);
+            }, 300)
+        })
+    });
+
+    data = "room.b";
+    it(`userB should move to '${data}' when triggering '${path}' event`, () => {
+        clientSocketB.emit(path, data);
+        return new Promise((resolve, reject) => {
+            clientSocketB.on(`room.current`, content => {
+                if (content === data) {
+                    resolve(content)
+                }
+            });
+
+            setTimeout(() => {
+                reject(false);
+            }, 300)
+        })
+    });
+
+    data = "room.c";
+    it(`userC should move to '${data}' when triggering '${path}' event`, () => {
+        clientSocketC.emit(path, data);
+        return new Promise((resolve, reject) => {
+            clientSocketC.on(`room.current`, content => {
+                if (content === data) {
+                    resolve(content)
+                }
+            });
+
+            setTimeout(() => {
+                reject(false);
+            }, 300)
+        })
+    });
+});
 ////////////////////////////////////////////////////////////////////////////
 // To Self
 ////////////////////////////////////////////////////////////////////////////

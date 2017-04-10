@@ -16,14 +16,13 @@ module.exports = app => {
             if (typeof res.users === "object" && typeof res.users[socket.id] === "object") {
                 res.users[socket.id].room = roomName;
             }
-
             socket.join(roomName, err => {
                 if (err) {
                     return console.error(err);
                 }
                 const userObj = _.pick(getuserObj(socket, res), ["socketId", "room"]);
 
-                socket.emit("room.current", userObj);
+                socket.emit("room.current", roomName);
             });
 
 
