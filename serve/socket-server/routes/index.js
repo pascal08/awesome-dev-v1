@@ -5,12 +5,12 @@ const Room = require("./../controllers/room");
 const testRoutes = require("./test");
 const socketApp = require("./../utilities/socket-app");
 
-module.exports = (req, res) => {
-    const app = socketApp(req, res);
+module.exports = app => {
+
     app.use("sent", require("./../utilities/sent"));
 
-    User.init(req, res);
-    Room.join(req, res, "general");
+    User.init(app.req, app.res);
+    Room.join(app.req, app.res, "general");
 
     app.route("user.update", User.update)
         .route("room.join", Room.join)
@@ -18,5 +18,6 @@ module.exports = (req, res) => {
         .route("disconnect", Room.leave)
 
     testRoutes(app);
-    return req;
+    
+    return app;
 };

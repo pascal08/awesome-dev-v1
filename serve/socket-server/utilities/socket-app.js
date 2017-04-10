@@ -1,9 +1,10 @@
 "use strict";
 
-module.exports = (req, res) => {
+module.exports = (req, res, nsp) => {
     return {
         req: req,
         res: res,
+        namespace: nsp,
         use: (name, fn) => {
             if (typeof this[name] !== "undefined") {
                 return console.error("You can only set a property once");

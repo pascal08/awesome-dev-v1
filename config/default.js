@@ -38,7 +38,8 @@ module.exports = {
     },
 
     "socket-server": {
-        port: 3001
+        port: 3001,
+        testPath: "/test"
     },
 
     "init": {
