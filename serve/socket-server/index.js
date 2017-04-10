@@ -7,19 +7,27 @@ global.requireUtility = function(utility) {
 
 const Config      = require("config");
 const io          = require("socket.io")(Config["socket-server"].port);
-const coreRoutes  = require("./routes/");
 const socketApp   = requireUtility("socket-app");
+const ioObject    = {};
+
+// Routes
 const testRoutes  = require("./routes/test");
+const userRoutes  = require("./routes/user");
+const roomRoutes  = require("./routes/room");
 
 
-const ioObject = {};
 
 const defaultNamespace = io.of("/").on("connection", socket => {
     if (typeof ioObject["/"] !== "object") {
         ioObject["/"] = {};
     }
 
-    coreRoutes(socketApp(socket, ioObject["/"], defaultNamespace))
+
+    const app = socketApp(socket, ioObject["/"], defaultNamespace);
+
+    testRoutes(app);
+    userRoutes(app);
+    roomRoutes(app);
 });
 
 const testNamespace = io.of(Config["socket-server"].testPath).on("connection", socket => {
@@ -27,5 +35,9 @@ const testNamespace = io.of(Config["socket-server"].testPath).on("connection", s
         ioObject[Config["socket-server"].testPath] = {};
     }
 
-    testRoutes(socketApp(socket, ioObject[Config["socket-server"].testPath], testNamespace));
+
+    const app = socketApp(socket, ioObject[Config["socket-server"].testPath], testNamespace);
+
+    testRoutes(app);
+    roomRoutes(app);
 });

@@ -12,7 +12,6 @@ module.exports = app => {
     return {
         join: req => {
             const roomName = req.body;
-            const userObj = _.pick(getuserObj(socket, res), ["socketId", "room"]);
 
             if (typeof res.users === "object" && typeof res.users[socket.id] === "object") {
                 res.users[socket.id].room = roomName;
@@ -22,6 +21,7 @@ module.exports = app => {
                 if (err) {
                     return console.error(err);
                 }
+                const userObj = _.pick(getuserObj(socket, res), ["socketId", "room"]);
 
                 socket.emit("room.current", userObj);
             });
