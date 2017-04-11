@@ -357,6 +357,37 @@ describe("toEveryoneInRoom", () => {
     });
 });
 
+describe("toOthersInRoom", () => {
+    const path = "toOthersInRoom";
+
+    // User A
+    it(`userA should NOT receive a message when userA sends a message to the "${path}" endpoint, in ${roomA}`, () => {
+        clientSocketA.emit(path, roomA);
+        return new Promise((resolve, reject) => {
+            clientSocketA.on(`${path}.success`, content => {
+                reject(content.indexOf(roomA) !== -1);
+            });
+
+            setTimeout(() => {
+                resolve(false);
+            }, 300)
+        })
+    });
+
+    it(`userB should receive a message when userA sends a message to the "${path}" endpoint, in ${roomA}`, () => {
+        clientSocketA.emit(path, roomA);
+        return new Promise((resolve, reject) => {
+            clientSocketB.on(`${path}.success`, content => {
+                resolve(content);
+            });
+
+            setTimeout(() => {
+                reject(false)
+            }, 300)
+        })
+    });
+});
+
 
 ////////////////////////////////////////////////////////////////////////////
 // Disconnect users

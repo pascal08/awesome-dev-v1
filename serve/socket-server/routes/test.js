@@ -24,7 +24,7 @@ module.exports = app => {
 
     // To others (within the same room)
     app.route("toOthersInRoom", (socket, res) => {
-        app.broadcast.in(res.room).emit("toOthersInRoom.success",socket.body);
+        socket.broadcast.in(res.room).emit("toOthersInRoom.success",socket.body);
     });
 
     return app;
