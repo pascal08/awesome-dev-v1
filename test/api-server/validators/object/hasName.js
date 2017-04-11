@@ -1,7 +1,7 @@
-/* global requireValidator, it */
+/* global requireApi, it */
 
 const assert = require("assert");
-const hasName = requireValidator("object/hasName");
+const hasName = requireApi("validators/object/hasName");
 
 it('Notify the developer that the property "name" is missing on the req.body object', () => {
     const o = {name: undefined};

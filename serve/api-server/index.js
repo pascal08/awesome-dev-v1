@@ -2,15 +2,11 @@
 
 // server.js
 // load the things we need
-const express = require("express"),
-    CONFIG = require("config"),
-    routes = require("./routes"),
-    bodyParser = require("body-parser"),
-    db = requireShared("utilities/db"),
-    app = express();
-
-requireShared("requireApiServer");
-
+const app       = require("express")(),
+    CONFIG      = require("config"),
+    routes      = require("./routes"),
+    bodyParser  = require("body-parser"),
+    db          = requireShared("utilities/db");
 
 app.use((req, res, next) => {
     req.db = db;
@@ -19,6 +15,7 @@ app.use((req, res, next) => {
     };
     next();
 });
+
 // to support JSON-encoded bodies
 app.use(bodyParser.json());
 // to support URL-encoded bodies

@@ -4,6 +4,10 @@ global.requireShared = function(string) {
     return require(`${__dirname}/serve/_shared/` + string);
 }
 
+global.requireApi = function(path) {
+    return require(`${__dirname}/serve/api-server/${path}`);
+}
+
 global.requireSocket = function(path) {
     return require(`${__dirname}/serve/socket-server/${path}`);
 }
@@ -21,10 +25,8 @@ const applicationMapping = {
 }
 
 let application = null;
-console.log("A:",process.env.NODE_PATH);
 if (typeof process.argv[2] != 'undefined') {
     application = process.argv[2].toLowerCase();
-    process.env.NODE_PATH = applicationMapping[application];
     require(applicationMapping[application]);
 } else {
     let options = [];

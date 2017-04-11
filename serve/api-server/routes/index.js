@@ -1,15 +1,15 @@
-/* global requireController */
+/* global requireApi */
 
 
 module.exports = function(app) {
 
   // Home
-    app.get("/", requireController("home"));
+    app.get("/", requireApi("controllers/home"));
 
   // Accounts / Authorization
-    app.post("/accounts", requireController("account/create"));
-    app.get("/auth", requireController("auth/me"));
-    app.post("/auth", requireController("auth"));
+    app.post("/accounts", requireApi("controllers/account/create"));
+    app.get("/auth", requireApi("controllers/auth/me"));
+    app.post("/auth", requireApi("controllers/auth"));
 
     return app;
 };

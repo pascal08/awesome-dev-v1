@@ -1,8 +1,8 @@
-/* global requireValidator, it */
+/* global requireApi, it */
 
 const CONFIG = require("config");
 const assert = require("assert");
-const authByEmail = requireValidator("account/authByEmail");
+const authByEmail = requireApi("validators/account/authByEmail");
 
 it(`Authentication is not successfull, because the account with email "${CONFIG.test.email}wrongasfdkjnasdfkjadfnskjafdnskjafdsnkjanfs" does not exist`, () => {
     const account = {

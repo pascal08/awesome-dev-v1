@@ -1,10 +1,10 @@
-/* global it, requireMiddleware */
+/* global it, requireApi */
 
 const {req, res, next} = require("../../../expressRoute");
 const CONFIG = require("config");
 const jwt = require("jsonwebtoken");
 const assert = require("assert");
-const auth = requireMiddleware("auth/index");
+const auth = requireApi("middleware/auth/index");
 const account = {email: CONFIG.test.email};
 
 

@@ -1,7 +1,7 @@
-/* global requireValidator, it */
+/* global requireApi, it */
 
 const assert = require("assert");
-const hasEmail = requireValidator("object/hasEmail");
+const hasEmail = requireApi("validators/object/hasEmail");
 
 it('Notify the developer that the property "email" is missing on the req.body object', () => {
     const o = {email: undefined};

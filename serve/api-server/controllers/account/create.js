@@ -1,12 +1,12 @@
-/* global requireShared, requireValidator */
+/* global requireShared, requireApi */
 
 const Account = requireShared("models/account");
 
 
 // Validators
-const hasPassword = requireValidator("object/hasPassword");
-const hasEmail = requireValidator("object/hasEmail");
-const doesNotExists = requireValidator("account/doesNotExists");
+const hasPassword = requireApi("validators/object/hasPassword");
+const hasEmail = requireApi("validators/object/hasEmail");
+const doesNotExists = requireApi("validators/account/doesNotExists");
 
 
 module.exports = function(req, res) {

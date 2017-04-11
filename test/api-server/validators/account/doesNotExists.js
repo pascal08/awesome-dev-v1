@@ -1,8 +1,8 @@
-/* global requireValidator, it */
+/* global requireApi, it */
 
 const assert = require("assert");
 const CONFIG = require("config");
-const doesNotExists = requireValidator("account/doesNotExists");
+const doesNotExists = requireApi("validators/account/doesNotExists");
 
 it('Return "alreadyExists" error when the test account exists', () => {
     const account = {

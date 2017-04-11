@@ -1,8 +1,8 @@
-/* global requireValidator, it */
+/* global requireApi, it */
 
 const assert = require("assert");
 const CONFIG = require("config");
-const doesExists = requireValidator("account/doesExists");
+const doesExists = requireApi("validators/account/doesExists");
 
 it(`Return string "doesNotExists", since the following account does not exists req.body = {email: "${CONFIG.test.email} wrong"}`, () => {
     const account = {
