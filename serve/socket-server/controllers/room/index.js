@@ -4,41 +4,55 @@
 const _ = require("lodash");
 const getuserObj = requireUtility("get-user-object");
 
-module.exports = {
-    join: (req, res, roomName) => {
+module.exports = app => {
+    const socket = app.socket;
+    const res = app.res;
+    // const namespace = app.namespace;
 
-        if (typeof res.users !== "object") {
-            return console.error("users collection is not defined", res.users);
-        }
+    return {
+        join: req => {
+            const roomName = req.body;
 
-        if (typeof res.users[req.id] !== "object") {
-            return console.error(`User with id ${req.id} needs to be an object`, res.users[req.id]);
-        }
+            if (typeof res.users === "object" && typeof res.users[socket.id] === "object") {
+                res.users[socket.id].room = roomName;
+            }
+            socket.join(roomName, err => {
+                if (err) {
+                    return console.error(err);
+                }
+                const userObj = _.pick(getuserObj(socket, res), ["socketId", "room"]);
 
-        res.users[req.id].room = roomName;
-
-        const userObj = _.pick(getuserObj(req, res), ["socketId", "room"]);
-
-        req.sent.toSelf("room.current", userObj);
-
-        return this;
-    },
-    leave: (req, res) => {
-        const users = res.users;
-        const user = users[req.id];
-
-        if (user) {
-            // Notify others
-            req.sent.toOthers("user.left", {
-                user: user,
-                users: _(users).filter({
-                    room: req.room
-                })
+                socket.emit("room.current", roomName);
             });
 
-            // Remove socket user from users list
-            delete users[req.id];
+
+
+            return this;
+        },
+        leave: () => {
+            const roomName = socket.body;
+            const users = res.users;
+
+            let user = null;
+            if (typeof res.users === "object") {
+                user = users[socket.id];
+            }
+
+            socket.leave(roomName, () => {
+                if (user) {
+                    // Notify others
+                    socket.broadcast.emit("user.left", {
+                        user: user,
+                        users: _(users).filter({
+                            room: socket.room
+                        })
+                    });
+
+                    // Remove socket user from users list
+                    delete users[socket.id];
+                }
+            });
+            return this;
         }
-        return this;
-    }
+    };
 };

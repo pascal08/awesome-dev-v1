@@ -2,38 +2,43 @@
 
 "use strict";
 
-const jsonic = require("jsonic")
+const rjson = require("relaxed-json")
 const _ = require("lodash");
 const getuserObj = requireUtility("get-user-object");
 
-module.exports = {
-    init: (req, res) => {
+module.exports = app => {
+    const socket = app.socket
+    const res = app.res;
+    const nsp = app.namespace;
 
-        if (typeof res.users !== "object") {
-            res.users = {};
-        }
-
-        // Add user
-        res.users[req.id] = {};
-    },
-    update: (req, res) => {
-
-        const props = jsonic(req.body);
-
-        if (typeof props !== "object") {
-            return console.error("user.update value should be an object, is ", props, req.body);
-        }
-
-        _.each(props, (value, key) => {
-            if (key == "room") {
-                return;
+    return {
+        init: () => {
+            if (typeof res.users !== "object") {
+                res.users = {};
             }
-            res.users[req.id][key] = value;
-        });
+
+            // Add user
+            res.users[socket.id] = {};
+        },
+        update: () => {
+
+            const props = rjson.parse(socket.body);
+
+            if (typeof props !== "object") {
+                return console.error("user.update value should be an object, is ", socket.body);
+            }
+
+            _.each(props, (value, key) => {
+                if (key == "room") {
+                    return;
+                }
+                res.users[socket.id][key] = value;
+            });
 
 
-        const userObj = _.omit(getuserObj(req, res), ["room"]);
+            const userObj = _.omit(getuserObj(socket, res), ["room"]);
 
-        req.sent.toSelf("user.current", userObj)
-    }
+            socket.emit("user.current", userObj)
+        }
+    };
 };
