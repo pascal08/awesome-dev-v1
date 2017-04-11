@@ -1,6 +1,7 @@
+/*global requireSocket */
 "use strict";
 
-const User = require("./../controllers/user");
+const User = requireSocket("controllers/user");
 
 module.exports = app => {
     const user = User(app);

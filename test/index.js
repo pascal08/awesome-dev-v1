@@ -1,8 +1,12 @@
-/* global requireShared, describe, it  */
+/* global  describe, it  */
 
 global.requireShared = function(string) {
     return require(`${__dirname}/../serve/_shared/${string}`);
 };
+
+global.requireSocket = function(path) {
+    return require(`${__dirname}/../serve/socket-server/${path}`);
+}
 
 global.requireDatamodel = function(modelName) {
     return require(`${__dirname}/../data-models/${modelName}`);

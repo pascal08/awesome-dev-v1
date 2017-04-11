@@ -1,6 +1,7 @@
+/*global requireSocket */
 "use strict";
 
-const Room = require("./../controllers/room");
+const Room = requireSocket("controllers/room");
 
 module.exports = app => {
     const room = Room(app);
