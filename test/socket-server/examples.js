@@ -356,3 +356,50 @@ describe("toEveryoneInRoom", () => {
         })
     });
 });
+
+
+////////////////////////////////////////////////////////////////////////////
+// Disconnect users
+////////////////////////////////////////////////////////////////////////////
+
+describe("Disconnect", () => {
+
+    it(`userA should be disconnected`, () => {
+        clientSocketA.disconnect();
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (clientSocketA.id === undefined) {
+                    return resolve(clientSocketA.id);
+                }
+                return reject(false);
+            }, 50)
+        })
+    });
+
+
+    it(`userB should be disconnected`, () => {
+        clientSocketB.disconnect();
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (clientSocketB.id === undefined) {
+                    return resolve(clientSocketA.id);
+                }
+                return reject(false);
+            }, 50)
+        })
+    });
+
+
+    it(`userC should be disconnected`, () => {
+        clientSocketC.disconnect();
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (clientSocketC.id === undefined) {
+                    return resolve(clientSocketA.id);
+                }
+                return reject(false);
+            }, 50)
+        })
+    });
+
+});
