@@ -1,10 +1,10 @@
-/* global requireUtility */
+/* global requireSocket */
 
 "use strict";
 
 const rjson = require("relaxed-json")
 const _ = require("lodash");
-const getuserObj = requireUtility("get-user-object");
+const getuserObj = requireSocket("utilities/get-user-object");
 
 module.exports = app => {
     const socket = app.socket

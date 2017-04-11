@@ -1,6 +1,7 @@
+/*global requireSocket */
 "use strict";
 
-const socketIoHelper = require("./../../utilities/socket-io-helper");
+const socketIoHelper = requireSocket("utilities/socket-io-helper");
 
 module.exports = (req, res) => {
     const helper = socketIoHelper(req);

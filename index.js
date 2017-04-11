@@ -4,6 +4,14 @@ global.requireShared = function(string) {
     return require(`${__dirname}/serve/_shared/` + string);
 }
 
+global.requireApi = function(path) {
+    return require(`${__dirname}/serve/api-server/${path}`);
+}
+
+global.requireSocket = function(path) {
+    return require(`${__dirname}/serve/socket-server/${path}`);
+}
+
 global.requireDatamodel = function(modelName) {
     return require(`${__dirname}/data-models/` + modelName);
 }
@@ -17,7 +25,6 @@ const applicationMapping = {
 }
 
 let application = null;
-
 if (typeof process.argv[2] != 'undefined') {
     application = process.argv[2].toLowerCase();
     require(applicationMapping[application]);

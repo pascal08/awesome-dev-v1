@@ -1,9 +1,9 @@
-/* global requireValidator, it */
+/* global requireApi, it */
 
 const assert = require("assert");
 const CONFIG = require("config");
 const ObjectId = require("promised-mongo").ObjectId;
-const hasAccountId = requireValidator("object/hasAccountId");
+const hasAccountId = requireApi("validators/object/hasAccountId");
 
 it('Notify the developer that the property "accountId" is missing in the object', () => {
     const o = {};

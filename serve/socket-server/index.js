@@ -1,13 +1,9 @@
-/* global requireUtility */
+/* global requireSocket */
 "use strict";
-
-global.requireUtility = function(utility) {
-    return require(`./utilities/${utility}`);
-}
 
 const Config      = require("config");
 const io          = require("socket.io")(Config["socket-server"].port);
-const socketApp   = requireUtility("socket-app");
+const socketApp   = requireSocket("utilities/socket-app");
 const ioObject    = {};
 
 // Routes

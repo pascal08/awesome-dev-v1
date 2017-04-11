@@ -1,8 +1,8 @@
-/* global it, requireMiddleware */
+/* global it, requireApi */
 
 const {req, res, next} = require("../../../expressRoute");
 const assert = require("assert");
-const authSelf = requireMiddleware("auth/self");
+const authSelf = requireApi("middleware/auth/self");
 
 
 it("Return false, whenever the req.accessToken._id not matches req.params.userId", () => {

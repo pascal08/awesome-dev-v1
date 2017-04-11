@@ -1,7 +1,7 @@
-/* global requireValidator, it */
+/* global requireApi, it */
 
 const assert = require("assert");
-const hasPassword = requireValidator("object/hasPassword");
+const hasPassword = requireApi("validators/object/hasPassword");
 
 it('Notify the developer that the property "password" is missing on the req.body object', () => {
     const o = {password: undefined};

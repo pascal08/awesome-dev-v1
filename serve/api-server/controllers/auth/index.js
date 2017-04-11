@@ -1,13 +1,13 @@
-/* global requireShared, requireValidator */
+/* global requireShared, requireApi */
 
 const CONFIG = require("config");
 const jwt = require("jsonwebtoken");
 const Account = requireShared("models/account");
 
 // Validators
-const hasPassword = requireValidator("object/hasPassword");
-const hasEmail = requireValidator("object/hasEmail");
-const authByEmail = requireValidator("account/authByEmail");
+const hasPassword = requireApi("validators/object/hasPassword");
+const hasEmail = requireApi("validators/object/hasEmail");
+const authByEmail = requireApi("validators/account/authByEmail");
 
 module.exports = function(req, res) {
     const credentials = req.body;
