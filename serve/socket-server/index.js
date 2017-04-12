@@ -37,3 +37,7 @@ const testNamespace = io.of(Config["socket-server"].testPath).on("connection", s
     testRoutes(app);
     roomRoutes(app);
 });
+
+console.log(`${Config["socket-server"].port} is the magic port`);
+
+module.exports = io;

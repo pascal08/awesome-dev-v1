@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
 global.requireShared = function(string) {
-    return require(`${__dirname}/serve/_shared/` + string);
+    return require(`${__dirname}/serve/_shared/${string}`);
 }
 
 global.requireApi = function(path) {
@@ -13,25 +13,35 @@ global.requireSocket = function(path) {
 }
 
 global.requireDatamodel = function(modelName) {
-    return require(`${__dirname}/data-models/` + modelName);
+    return require(`${__dirname}/data-models/${modelName}`);
 }
 
-const _ = require('lodash');
+const _ = require("lodash");
 
-const applicationMapping = {
-    'init': './serve/initialization',
-    'socket-server': './serve/socket-server',
-    'api-server': './serve/api-server'
+
+
+const serve = app => {
+    const applicationMapping = {
+        "init": "./serve/initialization",
+        "socket-server": "./serve/socket-server",
+        "api-server": "./serve/api-server"
+    }
+
+    app = app.toLowerCase();
+
+    if (typeof applicationMapping[app] != "undefined") {
+        return require(applicationMapping[app]);
+    } else {
+        const options = [];
+        _.each(applicationMapping, (value, key) => {
+            options.push(key);
+        })
+        return console.error("Please add one of the following properties to run the corresponding script:\r\n", options);
+    }
 }
 
-let application = null;
-if (typeof process.argv[2] != 'undefined') {
-    application = process.argv[2].toLowerCase();
-    require(applicationMapping[application]);
-} else {
-    let options = [];
-    _.each(applicationMapping, (value, key) => {
-        options.push(key);
-    })
-    return console.error('Please add one of the following properties to run the corresponding script:\r\n', options);
+if (process.argv[2]) {
+    serve(process.argv[2]);
 }
+
+module.exports = serve;

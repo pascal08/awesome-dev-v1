@@ -29,3 +29,5 @@ routes(app);
 
 app.listen(CONFIG["api-server"].http.port);
 console.log(`${CONFIG["api-server"].http.port} is the magic port`);
+
+module.exports = app;
