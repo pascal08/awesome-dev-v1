@@ -1,4 +1,5 @@
-#Proto Skeleton
+# Proto Skeleton
+
 This prototyping skeleton is meant for experimenting some philosophies I have about the requirements of rapid prototyping and how you should structure it.
 
 I try to tackle the following issues within this skeleton:
@@ -15,7 +16,6 @@ It will also empower you directly to run the following services
 - REST API
 - Socket server
 - Mail server [in progress]
-- Web server(s) [in progress]
 
 There should be support for multiple applications, hooked to this back-end architecture. These kind of apps should not be limited to any platform. Webapps, mobile apps, tv apps, desktop applications, everything should be possible.
 
