@@ -1,4 +1,4 @@
-const CONFIG = require("config"),
+const Config = require("config"),
     monk = require("monk");
 
-module.exports = monk(CONFIG.mongodb.database);
+module.exports = monk(Config.mongodb.database);

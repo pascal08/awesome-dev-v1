@@ -3,7 +3,7 @@
 // server.js
 // load the things we need
 const app       = require("express")(),
-    CONFIG      = require("config"),
+    Config      = require("Config"),
     routes      = require("./routes"),
     bodyParser  = require("body-parser"),
     db          = requireShared("utilities/db");
@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({
 routes(app);
 
 
-app.listen(CONFIG["api-server"].http.port);
-console.log(`${CONFIG["api-server"].http.port} is the magic port`);
+app.listen(Config["api-server"].http.port);
+console.log(`${Config["api-server"].http.port} is the magic port`);
 
 module.exports = app;

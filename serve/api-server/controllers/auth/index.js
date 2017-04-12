@@ -1,6 +1,6 @@
 /* global requireShared, requireApi */
 
-const CONFIG = require("config");
+const Config = require("Config");
 const jwt = require("jsonwebtoken");
 const Account = requireShared("models/account");
 
@@ -22,8 +22,8 @@ module.exports = function(req, res) {
       Account.getByEmail(credentials.email, credentials.password)
     .then(account => {
 
-        const token = jwt.sign(account, CONFIG.security.secret, {
-            expiresIn: CONFIG.security.tokenLife
+        const token = jwt.sign(account, Config.security.secret, {
+            expiresIn: Config.security.tokenLife
         });
 
         return res.status(202).json({accessToken: token});

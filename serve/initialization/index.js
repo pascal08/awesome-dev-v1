@@ -1,7 +1,7 @@
 /* global requireSharedUtility, Promise, requireAction*/
 "use strict";
 
-const CONFIG = require("config"),
+const Config = require("config"),
     fs = require("fs"),
     _ = require("lodash"),
     db = requireSharedUtility("db");
@@ -32,7 +32,7 @@ global.requireUtility = function(middleware) {
 
 const queu = _.slice(process.argv, 3);
 if (queu.length < 1) {
-    _.each(fs.readdirSync(CONFIG.init.directory), file => {
+    _.each(fs.readdirSync(Config.init.directory), file => {
         if (file.indexOf(".json")) {
             queu.push(file.replace(".json", ""));
         }
@@ -40,7 +40,7 @@ if (queu.length < 1) {
 }
 
 _.each(queu, collection => {
-    const cData = JSON.parse(fs.readFileSync(`${CONFIG.init.directory}/${collection}.json`, "utf-8"));
+    const cData = JSON.parse(fs.readFileSync(`${Config.init.directory}/${collection}.json`, "utf-8"));
 
     if (!cData.length) {
         return;

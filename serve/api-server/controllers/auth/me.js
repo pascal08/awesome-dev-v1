@@ -1,4 +1,4 @@
-const CONFIG = require("config");
+const Config = require("Config");
 const jwt = require("jsonwebtoken");
 
 module.exports = function(req, res) {
@@ -11,7 +11,7 @@ module.exports = function(req, res) {
             message: "No token provided."
         });
     }
-    jwt.verify(token, CONFIG.security.secret, (err, result) => {
+    jwt.verify(token, Config.security.secret, (err, result) => {
         if(err) {
             res.status(498).send({
                 authorized: false,
