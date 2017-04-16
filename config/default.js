@@ -42,6 +42,10 @@ module.exports = {
         testPath: "/test"
     },
 
+    "mail-server": {
+        interval: 10000 // Amount of miliseconds between mails
+    },
+
     "init": {
         directory: `${__dirname}/../serve/initialization/data`
     },
