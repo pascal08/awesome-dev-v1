@@ -1,6 +1,6 @@
 /* global requireShared, requireApi */
 
-const Config = require("Config");
+const Config = require("config");
 const jwt = require("jsonwebtoken");
 const Account = requireShared("models/account");
 

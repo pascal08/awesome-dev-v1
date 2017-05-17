@@ -3,7 +3,7 @@
 // server.js
 // load the things we need
 const app       = require("express")(),
-    Config      = require("Config"),
+    Config      = require("config"),
     routes      = require("./routes"),
     bodyParser  = require("body-parser"),
     db          = requireShared("utilities/db");

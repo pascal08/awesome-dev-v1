@@ -1,4 +1,4 @@
-const Config = require("Config");
+const Config = require("config");
 const jwt = require("jsonwebtoken");
 
 module.exports = function(req, res) {
