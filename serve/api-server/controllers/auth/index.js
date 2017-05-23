@@ -23,7 +23,8 @@ module.exports = function(req, res) {
     .then(account => {
 
         const token = jwt.sign(account, Config.security.secret, {
-            expiresIn: Config.security.tokenLife
+            expiresIn: Config.security.tokenLife,
+            algorithm: Config.security.hash
         });
 
         return res.status(202).json({accessToken: token});
