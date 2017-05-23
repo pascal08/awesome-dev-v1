@@ -1,6 +1,7 @@
 /* global requireApi */
 
 const isAuthorized = requireApi("passport-strategies/jwt").authorize;
+const authorize = requireApi("passport-strategies/local").authorize;
 
 module.exports = function(app) {
 
@@ -13,7 +14,7 @@ module.exports = function(app) {
     app.get("/test", isAuthorized, (req,res) => {
         res.status(200).send({});
     });
-    app.post("/auth", requireApi("controllers/auth"));
+    app.post("/auth", authorize);
 
     return app;
 };

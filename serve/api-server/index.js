@@ -10,15 +10,16 @@ const app       = require("express")(),
     db          = requireShared("utilities/db");
 
 passport.serializeUser((user, cb) => {
-    console.log(user);
     cb(null, user._id)
 })
 
 passport.deserializeUser((id, cb) => {
+    console.log("deserializing, unknown what this does");
     // findUser(id, cb)
 })
 
 passport.use(requireApi("/passport-strategies/jwt").strategy);
+passport.use(requireApi("/passport-strategies/local").strategy);
 // console.log(passport._strategies);
 
 app.use((req, res, next) => {
