@@ -48,8 +48,10 @@ module.exports = {
                         return reject("accountNotFound");
                     }
 
-                    if (account.hashedPassword !== pass.getHashedPass(password, account.salt)) {
-                        return reject("incorrectPassword");
+                    if (password) {
+                        if (account.hashedPassword !== pass.getHashedPass(password, account.salt)) {
+                            return reject("incorrectPassword");
+                        }
                     }
 
                     delete account.salt;

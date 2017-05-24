@@ -1,11 +1,14 @@
-/* global requireShared */
+/* global requireShared, requireApi */
 
 const localStrategy = require("passport-local").Strategy;
 const Config = require("config");
 const jwt = require("jsonwebtoken");
-// const {pick, size} = require("lodash");
 const passport = require("passport");
 const Account = requireShared("models/account");
+
+const hasPassword = requireApi("validators/object/hasPassword");
+const hasEmail = requireApi("validators/object/hasEmail");
+const authByEmail = requireApi("validators/account/authByEmail");
 
 const options = {
     usernameField: "email",
@@ -33,13 +36,26 @@ module.exports = {
 
 
     authorize: (req, res, next) => {
-        passport.authenticate("local", (err, user) => {
+        const credentials = req.body;
 
-            if (user) {
-                return res.status(202).send(user);
-            }
+        Promise.all([
+            hasPassword(credentials),
+            hasEmail(credentials),
+            authByEmail(credentials)
+        ]).then(() => {
 
-            return res.status(406).send(err);
-        })(req, res, next);
+            passport.authenticate("local", (err, user) => {
+
+                if (user) {
+                    return res.status(202).send(user);
+                }
+
+                return res.status(406).send(err);
+            })(req, res, next);
+        })
+        .catch(err => {
+            res.status(406);
+            res.json(err);
+        });
     }
 }
