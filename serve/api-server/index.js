@@ -20,6 +20,7 @@ passport.deserializeUser((id, cb) => {
 
 passport.use(requireApi("/passport-strategies/jwt").strategy);
 passport.use(requireApi("/passport-strategies/local").strategy);
+passport.use(requireApi("/passport-strategies/facebook").strategy);
 // console.log(passport._strategies);
 
 app.use((req, res, next) => {

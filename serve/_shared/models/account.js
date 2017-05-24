@@ -40,6 +40,24 @@ module.exports = {
 
 
     },
+    createViaFacebook: function(account) {
+
+        const newAccount = _.merge({}, accountModel, account);
+
+
+        return new Promise((resolve, reject) => {
+            collection.findOne({facebookId: account.facebookId})
+            .then(result => {
+                if (result === null) {
+                    // Insert newAccount in database
+                    return collection.insert(newAccount).then(result => resolve(result));
+                }
+                return reject("accountAlreadyExists");
+            })
+            .catch(reject);
+        });
+
+    },
     delete: accountId => collection.remove(ObjectId(accountId)),
     getByEmail: (email, password) => new Promise((resolve, reject) => {
         collection.findOne({email: email})
@@ -56,6 +74,17 @@ module.exports = {
 
                     delete account.salt;
                     delete account.hashedPassword;
+
+                    return resolve(account);
+                });
+    }),
+    getByFacebookId: (facebookId) => new Promise((resolve, reject) => {
+        collection.findOne({facebookId: facebookId})
+                .then(account => {
+                    if (!account) {
+                        // Create account when none is found
+                        return reject("accountNotFound");
+                    }
 
                     return resolve(account);
                 });

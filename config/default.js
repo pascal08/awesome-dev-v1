@@ -64,7 +64,13 @@ module.exports = {
         tokenLife: 21600000,
         /*6 hours*/
         refreshLife: 1209600000, /*14 days*/
-        hash: "HS256"
+        hash: "HS256",
+
+        facebook: {
+            appId: null,
+            appSecret: null,
+            callbackURL: null
+        }
 
     },
 
