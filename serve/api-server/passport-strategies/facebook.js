@@ -10,6 +10,7 @@ const options = {
     clientID: Config.security.facebook.appId,
     clientSecret: Config.security.facebook.appSecret,
     callbackURL: Config.security.facebook.callbackURL,
+    profileFields: ["id", "displayName", "email"],
     session: false
 };
 
@@ -24,11 +25,12 @@ module.exports = {
             return done(null, account);
         }).catch(() => {
             const user = {
-                name: profile.displayName,
-                facebookId: profile.id
+                facebookId: profile.id,
+                name: profile._json.name,
+                email: profile._json.email
             };
 
-            Account.createByFacebook(user)
+            Account.createViaFacebook(user)
             .then(account => {
                 return done(null, account);
             })
@@ -41,7 +43,7 @@ module.exports = {
 
     authorize: (req, res, next) => {
 
-        passport.authenticate("facebook", (err, account) => {
+        passport.authenticate("facebook", {scope: ["email"]},(err, account) => {
 
             if (typeof req.user === "undefined") {
                 req.user = account;
