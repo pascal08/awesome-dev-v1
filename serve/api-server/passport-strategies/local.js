@@ -1,10 +1,9 @@
 /* global requireShared, requireApi */
 
 const localStrategy = require("passport-local").Strategy;
-const Config = require("config");
-const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const Account = requireShared("models/account");
+const signToken = requireShared("utilities/signToken");
 
 const hasPassword = requireApi("validators/object/hasPassword");
 const hasEmail = requireApi("validators/object/hasEmail");
@@ -22,12 +21,7 @@ module.exports = {
     strategy: new localStrategy( options, (email, password, done) => {
         Account.getByEmail(email, password)
         .then(account => {
-            const token = jwt.sign(account, Config.security.secret, {
-                expiresIn: Config.security.tokenLife,
-                algorithm: Config.security.hash
-            });
-
-            return done(null, {accessToken: token});
+            return done(null, {accessToken: signToken(account)});
         })
         .catch(err => {
             return done({errorType: err});
@@ -44,10 +38,10 @@ module.exports = {
             authByEmail(credentials)
         ]).then(() => {
 
-            passport.authenticate("local", (err, user) => {
+            passport.authenticate("local", (err, account) => {
 
-                if (user) {
-                    return res.status(202).send(user);
+                if (account) {
+                    return res.status(202).send(account);
                 }
 
                 return res.status(406).send(err);

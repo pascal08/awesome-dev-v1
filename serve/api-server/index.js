@@ -23,6 +23,15 @@ passport.use(requireApi("/passport-strategies/local").strategy);
 passport.use(requireApi("/passport-strategies/facebook").strategy);
 // console.log(passport._strategies);
 
+// Ass Cors headers
+if (Config["api-server"].cors.acceptAll) {
+    app.use((req, res, next) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
+}
+
 app.use((req, res, next) => {
     req.db = db;
     req.passport = passport
