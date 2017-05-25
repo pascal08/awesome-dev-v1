@@ -40,8 +40,12 @@ module.exports = {
 
             passport.authenticate("local", (err, account) => {
 
+                if (typeof req.user === "undefined") {
+                    req.user = account;
+                }
+
                 if (account) {
-                    return res.status(202).send(account);
+                    return next();
                 }
 
                 return res.status(406).send(err);
