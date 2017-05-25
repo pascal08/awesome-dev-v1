@@ -7,6 +7,7 @@ const app       = require("express")(),
     Config      = require("config"),
     routes      = require("./routes"),
     bodyParser  = require("body-parser"),
+    session     = require("express-session"),
     db          = requireShared("utilities/db");
 
 passport.serializeUser((user, cb) => {
@@ -40,6 +41,12 @@ app.use((req, res, next) => {
     };
     next();
 });
+
+app.use(session({
+    secret: Config.security.secret,
+    resave: true,
+    saveUninitialized: true
+}));
 
 app.use(passport.initialize())
 app.use(passport.session())

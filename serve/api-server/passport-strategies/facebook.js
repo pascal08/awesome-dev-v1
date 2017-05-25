@@ -5,7 +5,6 @@ const Config = require("config");
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const Account = requireShared("models/account");
-const signToken = requireShared("utilities/signToken");
 
 const options = {
     clientID: Config.security.facebook.appId,
@@ -22,7 +21,7 @@ module.exports = {
 
         Account.getByFacebookId( profile.id)
         .then(account => {
-            return done(null, {accessToken: signToken(account)});
+            return done(null, account);
         }).catch(() => {
             const user = {
                 name: profile.displayName,
@@ -31,7 +30,7 @@ module.exports = {
 
             Account.createByFacebook(user)
             .then(account => {
-                return done(null, {accessToken: signToken(account)});
+                return done(null, account);
             })
             .catch(err => {
                 return done(err);
@@ -43,8 +42,13 @@ module.exports = {
     authorize: (req, res, next) => {
 
         passport.authenticate("facebook", (err, account) => {
+
+            if (typeof req.user === "undefined") {
+                req.user = account;
+            }
+
             if (account) {
-                return res.status(202).send(account);
+                return next();
             }
 
             return res.status(406).send(err);
