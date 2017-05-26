@@ -10,9 +10,10 @@ module.exports = {
     ***************************************************************/
     "api-server": {
 
-        //White-list of domains allowed to access our resources.
         cors: {
-            acceptAll: false
+            acceptAll: false, // Noob way, ignores "Access-Control-Allow-Origin" & "Access-Control-Allow-Headers" values
+            "Access-Control-Allow-Origin": null,
+            "Access-Control-Allow-Headers": null
         },
 
         //Plain-text HTTP server configuration.
@@ -63,7 +64,14 @@ module.exports = {
         //changes in user-permissions to be propagated.
         tokenLife: 21600000,
         /*6 hours*/
-        refreshLife: 1209600000 /*14 days*/
+        refreshLife: 1209600000, /*14 days*/
+        hash: "HS256",
+
+        facebook: {
+            appId: null,
+            appSecret: null,
+            callbackURL: null
+        }
 
     },
 
