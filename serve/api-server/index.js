@@ -36,7 +36,7 @@ passport.use(requireApi("/passport-strategies/google").strategy);
 app.use((req, res, next) => {
     if (Config["api-server"].cors.acceptAll === true) {
         res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Options, Accept");
+        res.header("Access-Control-Allow-Headers", `Origin, X-Requested-With, Authorization, Content-Type, Options, Accept`);
 
         return next();
     }
