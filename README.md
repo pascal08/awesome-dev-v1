@@ -52,7 +52,18 @@ google: {
     callbackURL: "http://localhost:3000/auth/google/callback" // Or other domain where API server is deployed
 }
 ```
-To specify a custom redirect url, you will need to specify it as a query parameter `/auth/facebook?redirectUrl=http://web.application.io` (this applies for `/auth/google` as well)
+To specify a custom redirect url, you will need to specify it as a query parameter `/auth/facebook?redirectUrl=http://web.application.io` (this applies for `/auth/google` as well).
+
+
+You can set the desired CORS header for _all_ requests by editing the `"api-server".cors` values.
+"acceptAll" sets the values as followed:
+```
+"Access-Control-Allow-Origin" = "*"
+"Access-Control-Allow-Headers" = "Origin, X-Requested-With, Content-Type, Accept"
+```
+
+If you prefer set them manually disable the "acceptAll" value by setting it's value to a falsey value. And modifiy `"api-server".cors['Access-Control-Allow-Origin']` & `"api-server".cors['Access-Control-Allow-Header']` manually.
+
 
 ------------------
 ## Socket server
@@ -83,7 +94,6 @@ This string you will then add to the configuration as followed:
 # Roadmap
 - Api server
     - Add password reset functionality
-    - Add proper CORS support/configuration settings
 - Socket server
     - Further improvement of Connect implementation
 - Mail server

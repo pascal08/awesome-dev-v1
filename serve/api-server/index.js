@@ -31,16 +31,26 @@ passport.use(requireApi("/passport-strategies/jwt").strategy);
 passport.use(requireApi("/passport-strategies/local").strategy);
 passport.use(requireApi("/passport-strategies/facebook").strategy);
 passport.use(requireApi("/passport-strategies/google").strategy);
-// console.log(passport._strategies);
 
-// Ass Cors headers
-if (Config["api-server"].cors.acceptAll) {
-    app.use((req, res, next) => {
+// Add Cors headers
+app.use((req, res, next) => {
+    if (Config["api-server"].cors.acceptAll === true) {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        next();
-    });
-}
+
+        return next();
+    }
+
+    if (Config["api-server"].cors["Access-Control-Allow-Origin"]) {
+        res.header("Access-Control-Allow-Origin", Config["api-server"].cors["Access-Control-Allow-Origin"]);
+    }
+
+    if (Config["api-server"].cors["Access-Control-Allow-Headers"]) {
+        res.header("Access-Control-Allow-Headers", Config["api-server"].cors["Access-Control-Allow-Headers"]);
+    }
+
+    return next();
+});
 
 app.use((req, res, next) => {
     req.db = db;

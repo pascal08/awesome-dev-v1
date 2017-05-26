@@ -10,9 +10,10 @@ module.exports = {
     ***************************************************************/
     "api-server": {
 
-        //White-list of domains allowed to access our resources.
         cors: {
-            acceptAll: false
+            acceptAll: false, // Noob way, ignores "Access-Control-Allow-Origin" & "Access-Control-Allow-Headers" values
+            "Access-Control-Allow-Origin": null,
+            "Access-Control-Allow-Headers": null
         },
 
         //Plain-text HTTP server configuration.
