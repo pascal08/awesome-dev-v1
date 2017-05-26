@@ -22,6 +22,7 @@ passport.deserializeUser((id, cb) => {
 passport.use(requireApi("/passport-strategies/jwt").strategy);
 passport.use(requireApi("/passport-strategies/local").strategy);
 passport.use(requireApi("/passport-strategies/facebook").strategy);
+passport.use(requireApi("/passport-strategies/google").strategy);
 // console.log(passport._strategies);
 
 // Ass Cors headers

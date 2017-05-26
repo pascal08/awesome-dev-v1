@@ -1,14 +1,14 @@
 /* global requireShared */
 
-const facebookStrategy = require("passport-facebook").Strategy;
+const googleStrategy = require("passport-google-oauth20").Strategy;
 const Config = require("config");
 const passport = require("passport");
 const Account = requireShared("models/account");
 
 const options = {
-    clientID: Config.security.facebook.appId,
-    clientSecret: Config.security.facebook.appSecret,
-    callbackURL: Config.security.facebook.callbackURL,
+    clientID: Config.security.google.appId,
+    clientSecret: Config.security.google.appSecret,
+    callbackURL: Config.security.google.callbackURL,
     profileFields: ["id", "displayName", "email"],
     session: false
 };
@@ -17,19 +17,18 @@ const options = {
 
 
 module.exports = {
-    strategy: new facebookStrategy( options, (accessToken, refreshToken, profile, done) => {
-
-        Account.getByFacebookId( profile.id)
+    strategy: new googleStrategy( options, (accessToken, refreshToken, profile, done) => {
+        Account.getByGoogleId( profile.id)
         .then(account => {
             return done(null, account);
         }).catch(() => {
             const user = {
-                facebookId: profile.id,
-                name: profile._json.name,
-                email: profile._json.email
+                googleId: profile.id,
+                name: profile.displayName,
+                email: profile.emails[0].value
             };
 
-            Account.createViaFacebook(user)
+            Account.createViaGoogle(user)
             .then(account => {
                 return done(null, account);
             })
@@ -42,7 +41,7 @@ module.exports = {
 
     authorize: (req, res, next) => {
 
-        passport.authenticate("facebook", {scope: ["email"]},(err, account) => {
+        passport.authenticate("google", {scope: ["profile", "email"]},(err, account) => {
 
             if (typeof req.user === "undefined") {
                 req.user = account;
@@ -52,6 +51,7 @@ module.exports = {
                 return next();
             }
 
+            console.error(err);
             return res.status(406).send(err);
         })(req, res, next);
     }

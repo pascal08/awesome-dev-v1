@@ -42,11 +42,34 @@ module.exports = {
     },
     createViaFacebook: function(account) {
 
+        if (!account.facebookId) {
+            return console.error("missing required parameter facebookId");
+        }
         const newAccount = _.merge({}, accountModel, account);
 
 
         return new Promise((resolve, reject) => {
             collection.findOne({facebookId: account.facebookId})
+            .then(result => {
+                if (result === null) {
+                    // Insert newAccount in database
+                    return collection.insert(newAccount).then(result => resolve(result));
+                }
+                return reject("accountAlreadyExists");
+            })
+            .catch(reject);
+        });
+
+    },
+    createViaGoogle: function(account) {
+        
+        if (!account.googleId) {
+            return console.error("missing required parameter googleId");
+        }
+        const newAccount = _.merge({}, accountModel, account);
+
+        return new Promise((resolve, reject) => {
+            collection.findOne({googleId: account.googleId})
             .then(result => {
                 if (result === null) {
                     // Insert newAccount in database
@@ -78,15 +101,26 @@ module.exports = {
                     return resolve(account);
                 });
     }),
-    getByFacebookId: (facebookId) => new Promise((resolve, reject) => {
+    getByFacebookId: facebookId => new Promise((resolve, reject) => {
         collection.findOne({facebookId: facebookId})
-                .then(account => {
-                    if (!account) {
-                        // Create account when none is found
-                        return reject("accountNotFound");
-                    }
+        .then(account => {
+            if (!account) {
+                // Create account when none is found
+                return reject("accountNotFound");
+            }
 
-                    return resolve(account);
-                });
+            return resolve(account);
+        })
+    }),
+    getByGoogleId: googleId => new Promise((resolve, reject) => {
+        collection.findOne({googleId: googleId})
+        .then(account => {
+            if (!account) {
+                // Create account when none is found
+                return reject("accountNotFound");
+            }
+
+            return resolve(account);
+        });
     })
 };
