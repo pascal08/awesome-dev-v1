@@ -14,6 +14,7 @@ module.exports = function(app) {
     app.get("/", requireApi("controllers/home"));
 
   // Accounts / Authorization
+    app.delete("/accounts/:accountId", requireApi("controllers/account/delete"));
     app.post("/register", requireApi("controllers/account/create"));
     app.get("/auth", isAuthorized, requireApi("controllers/auth/me"));
 

@@ -8,7 +8,7 @@ const _ = require("lodash"),
     ObjectId = require("promised-mongo").ObjectId,
     collection = db.get("accounts");
 
-module.exports = {
+const Account = {
     create: function(account) {
 
         const newAccount = _.merge({}, accountModel, account);
@@ -81,7 +81,17 @@ module.exports = {
         });
 
     },
-    delete: accountId => collection.remove(ObjectId(accountId)),
+    delete: accountId => new Promise((resolve, reject) => {
+        Account.getById(accountId)
+        .then(account => {
+            collection.remove(ObjectId(accountId))
+            .then(() => {
+                return resolve(account);
+            })
+            .catch(reject);
+        })
+        .catch(reject);
+    }),
     getByEmail: (email, password) => new Promise((resolve, reject) => {
         collection.findOne({email: email})
         .then(account => {
@@ -101,18 +111,22 @@ module.exports = {
             return resolve(account);
         });
     }),
-    getById: id => new Promise((resolve, reject) => {
-        collection.findOne({_id: ObjectId(id)})
-        .then(account => {
-            if (!account) {
-                return reject("accountNotFound");
-            }
+    getById: accountId => new Promise((resolve, reject) => {
+        if (accountId.length === 12 || accountId.length === 24  ) {
+            collection.findOne({_id: ObjectId(accountId)})
+            .then(account => {
+                if (!account) {
+                    return reject("accountNotFound");
+                }
 
-            delete account.salt;
-            delete account.hashedPassword;
+                delete account.salt;
+                delete account.hashedPassword;
 
-            return resolve(account);
-        });
+                return resolve(account);
+            });
+        } else {
+            return reject("invalidId");
+        }
     }),
     getByFacebookId: facebookId => new Promise((resolve, reject) => {
         collection.findOne({facebookId: facebookId})
@@ -137,3 +151,5 @@ module.exports = {
         });
     })
 };
+
+module.exports = Account;
