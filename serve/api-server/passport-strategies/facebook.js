@@ -6,8 +6,8 @@ const passport = require("passport");
 const Account = requireShared("models/account");
 
 const options = {
-    clientID: Config.security.facebook.appId,
-    clientSecret: Config.security.facebook.appSecret,
+    clientID: Config.security.facebook.clientID,
+    clientSecret: Config.security.facebook.clientSecret,
     callbackURL: Config.security.facebook.callbackURL,
     profileFields: ["id", "displayName", "email"],
     session: false

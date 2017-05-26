@@ -6,8 +6,8 @@ const passport = require("passport");
 const Account = requireShared("models/account");
 
 const options = {
-    clientID: Config.security.google.appId,
-    clientSecret: Config.security.google.appSecret,
+    clientID: Config.security.google.clientID,
+    clientSecret: Config.security.google.clientSecret,
     callbackURL: Config.security.google.callbackURL,
     profileFields: ["id", "displayName", "email"],
     session: false
