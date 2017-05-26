@@ -52,7 +52,7 @@ google: {
     callbackURL: "http://localhost:3000/auth/google/callback" // Or other domain where API server is deployed
 }
 ```
-
+To specify a custom redirect url, you will need to specify it as a query parameter `/auth/facebook?redirectUrl=http://web.application.io` (this applies for `/auth/google` as well)
 
 ------------------
 ## Socket server
