@@ -8,6 +8,7 @@ const app       = require("express")(),
     routes      = require("./routes"),
     bodyParser  = require("body-parser"),
     session     = require("express-session"),
+    Account     = requireShared("models/account"),
     db          = requireShared("utilities/db");
 
 passport.serializeUser((user, cb) => {
@@ -15,8 +16,15 @@ passport.serializeUser((user, cb) => {
 })
 
 passport.deserializeUser((id, cb) => {
-    console.log("deserializing, unknown what this does");
-    // findUser(id, cb)
+    // This code is not tested
+    Account.getById(id)
+    .then(user => {
+        cb(null, user);
+    })
+    .catch(error => {
+        cb(error);
+    })
+    //  This code is not tested ./
 })
 
 passport.use(requireApi("/passport-strategies/jwt").strategy);

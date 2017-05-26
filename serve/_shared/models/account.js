@@ -62,7 +62,7 @@ module.exports = {
 
     },
     createViaGoogle: function(account) {
-        
+
         if (!account.googleId) {
             return console.error("missing required parameter googleId");
         }
@@ -84,22 +84,35 @@ module.exports = {
     delete: accountId => collection.remove(ObjectId(accountId)),
     getByEmail: (email, password) => new Promise((resolve, reject) => {
         collection.findOne({email: email})
-                .then(account => {
-                    if (!account) {
-                        return reject("accountNotFound");
-                    }
+        .then(account => {
+            if (!account) {
+                return reject("accountNotFound");
+            }
 
-                    if (password) {
-                        if (account.hashedPassword !== pass.getHashedPass(password, account.salt)) {
-                            return reject("incorrectPassword");
-                        }
-                    }
+            if (password) {
+                if (account.hashedPassword !== pass.getHashedPass(password, account.salt)) {
+                    return reject("incorrectPassword");
+                }
+            }
 
-                    delete account.salt;
-                    delete account.hashedPassword;
+            delete account.salt;
+            delete account.hashedPassword;
 
-                    return resolve(account);
-                });
+            return resolve(account);
+        });
+    }),
+    getById: id => new Promise((resolve, reject) => {
+        collection.findOne({_id: ObjectId(id)})
+        .then(account => {
+            if (!account) {
+                return reject("accountNotFound");
+            }
+
+            delete account.salt;
+            delete account.hashedPassword;
+
+            return resolve(account);
+        });
     }),
     getByFacebookId: facebookId => new Promise((resolve, reject) => {
         collection.findOne({facebookId: facebookId})
