@@ -64,6 +64,19 @@ Pretty basic at the moment, the sockets implementation runs on top of Sockets.io
 
 The mail server is a Nodemailer based service which continuously processes the mailing queue. This queue is stored in the Mongodb database within 'mailingQueu'. You can push e-mails to this queu by using Mail.add(mailObject), where mailObject is an object as specified in the `data-models/email.json`
 
+### Configure SMTP
+
+You will need to configure the smtp connection to be able to send mails. The easiest and most straightforward way of doing so is [described on the website of nodemon](https://nodemailer.com/smtp/).
+This string you will then add to the configuration as followed:
+
+```
+{
+    ['mail-server']: {
+        smtp: "smtps://user%40gmail.com:pass@smtp.gmail.com/?pool=true"
+    }
+}
+```
+
 ------------------
 
 
