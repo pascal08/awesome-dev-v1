@@ -13,7 +13,7 @@ module.exports = account => {
     }
 
     const token = jwt.sign(account, Config.security.secret, {
-        expiresIn: Config.security.tokenLife,
+        expiresIn: Config.security.accessTokenLife,
         algorithm: Config.security.hash
     });
 
