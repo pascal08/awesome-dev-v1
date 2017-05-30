@@ -3,7 +3,7 @@
 const localStrategy = require("passport-local").Strategy;
 const passport = require("passport");
 const Account = requireShared("models/account");
-const signToken = requireShared("utilities/signToken");
+const signAccessToken = requireShared("utilities/signAccessToken");
 
 const hasPassword = requireApi("validators/object/hasPassword");
 const hasEmail = requireApi("validators/object/hasEmail");
@@ -21,7 +21,7 @@ module.exports = {
     strategy: new localStrategy( options, (email, password, done) => {
         Account.getByEmail(email, password)
         .then(account => {
-            return done(null, {accessToken: signToken(account)});
+            return done(null, account);
         })
         .catch(err => {
             return done({errorType: err});

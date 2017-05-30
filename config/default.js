@@ -62,9 +62,9 @@ module.exports = {
 
         //Please note that the token-life also determines the time it takes for
         //changes in user-permissions to be propagated.
-        tokenLife: 21600000,
+        accessTokenLife: 21600000,
         /*6 hours*/
-        refreshLife: 1209600000, /*14 days*/
+        refreshTokenLife: 1209600000, /*14 days*/
         hash: "HS256",
 
         facebook: {

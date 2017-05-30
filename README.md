@@ -59,7 +59,7 @@ You can set the desired CORS header for _all_ requests by editing the `"api-serv
 "acceptAll" sets the values as followed:
 ```
 "Access-Control-Allow-Origin" = "*"
-"Access-Control-Allow-Headers" = "Origin, X-Requested-With, Content-Type, Accept"
+"Access-Control-Allow-Headers" = "Origin, X-Requested-With, Content-Type, Options, Authorization, Accept"
 ```
 
 If you prefer set them manually disable the "acceptAll" value by setting it's value to a falsey value. And modifiy `"api-server".cors['Access-Control-Allow-Origin']` & `"api-server".cors['Access-Control-Allow-Header']` manually.

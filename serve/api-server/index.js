@@ -29,14 +29,18 @@ passport.deserializeUser((id, cb) => {
 
 passport.use(requireApi("/passport-strategies/jwt").strategy);
 passport.use(requireApi("/passport-strategies/local").strategy);
-passport.use(requireApi("/passport-strategies/facebook").strategy);
-passport.use(requireApi("/passport-strategies/google").strategy);
+if (Config.security.facebook && Config.security.facebook.clientID) {
+    passport.use(requireApi("/passport-strategies/facebook").strategy);
+}
+if (Config.security.google && Config.security.google.clientID) {
+    passport.use(requireApi("/passport-strategies/google").strategy);
+}
 
 // Add Cors headers
 app.use((req, res, next) => {
     if (Config["api-server"].cors.acceptAll === true) {
         res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.header("Access-Control-Allow-Headers", `Origin, X-Requested-With, Authorization, Content-Type, Options, Accept`);
 
         return next();
     }
