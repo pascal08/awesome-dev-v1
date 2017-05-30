@@ -138,6 +138,10 @@ const Account = {
 
             return resolve(account);
         })
+        .catch(err => {
+            console.error(err);
+            reject("internalServerError");
+        });
     }),
     getByGoogleId: googleId => new Promise((resolve, reject) => {
         collection.findOne({googleId: googleId})
@@ -148,6 +152,10 @@ const Account = {
             }
 
             return resolve(account);
+        })
+        .catch(err => {
+            console.error(err);
+            reject("internalServerError");
         });
     })
 };
