@@ -44,7 +44,9 @@ module.exports = {
     },
 
     "mail-server": {
-        interval: 10000 // Amount of miliseconds between mails
+        interval: 10000, // Amount of miliseconds between mails
+        smtp: null,
+        appUrl: ""
     },
 
     "init": {
@@ -62,9 +64,9 @@ module.exports = {
 
         //Please note that the token-life also determines the time it takes for
         //changes in user-permissions to be propagated.
-        accessTokenLife: 21600000,
-        /*6 hours*/
-        refreshTokenLife: 1209600000, /*14 days*/
+        accessTokenLife: 21600, // 6 minutes
+        refreshTokenLife: 1209600, // 14 days
+        passwordResetTokenLife: 3600, // 1 hour
         hash: "HS256",
 
         facebook: {

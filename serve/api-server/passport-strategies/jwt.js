@@ -16,7 +16,7 @@ const options = {
 
 module.exports = {
     strategy: new JwtStrategy(options, (jwt_payload, done) => {
-        const user = pick(jwt_payload, ["_id", "name", "email"]);
+        const user = pick(jwt_payload, ["_id", "name", "email", "tokenType"]);
 
         return done(null, user);
     }),
@@ -30,16 +30,23 @@ module.exports = {
             }
 
             // Validate missing token
-            if (info && info.message === "No auth token") {
-                return res.status(422).send({errorType: "noAuthToken"});
+            if (info && info.message === "No access token") {
+                return res.status(422).send({errorType: "noAccessToken"});
             }
 
             // Validate corrupted token
             if (!user) {
-                return res.status(422).send({errorType: "corruptedJWT"});
+                return res.status(422).send({errorType: "tokenExpired"});
             }
 
-            // Log the user in so user var is accesible via req.user
+            // Validate token type
+            if (user.tokenType != "access") {
+                return res.status(422).send({errorType: "invalidTokenType"});
+            }
+
+            delete user.tokenType;
+
+            // Log the user in so user var is accessible via req.user
             req.logIn(user, err => {
                 if (err) {
                     return next(err);

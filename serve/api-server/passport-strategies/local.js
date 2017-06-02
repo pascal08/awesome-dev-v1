@@ -3,7 +3,6 @@
 const localStrategy = require("passport-local").Strategy;
 const passport = require("passport");
 const Account = requireShared("models/account");
-const signAccessToken = requireShared("utilities/signAccessToken");
 
 const hasPassword = requireApi("validators/object/hasPassword");
 const hasEmail = requireApi("validators/object/hasEmail");
@@ -34,8 +33,7 @@ module.exports = {
 
         Promise.all([
             hasPassword(credentials),
-            hasEmail(credentials),
-            authByEmail(credentials)
+            hasEmail(credentials)
         ]).then(() => {
 
             passport.authenticate("local", (err, account) => {

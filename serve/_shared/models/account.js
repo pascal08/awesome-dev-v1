@@ -6,7 +6,9 @@ const _ = require("lodash"),
     db = requireShared("utilities/db"),
     accountModel = requireDatamodel("account"),
     ObjectId = require("promised-mongo").ObjectId,
-    collection = db.get("accounts");
+    collection = db.get("accounts"),
+    jwt = require("jsonwebtoken"),
+    Config = require("config");
 
 const Account = {
     create: function(account) {
@@ -45,6 +47,9 @@ const Account = {
             const updatedAccount = _.merge({}, account, properties);
             collection.update({_id: ObjectId(accountId)}, updatedAccount)
             .then(() => {
+                delete updatedAccount.salt;
+                delete updatedAccount.hashedPassword;
+                delete updatedAccount.passwordResetToken;
                 return resolve(updatedAccount)
             })
             .catch(err => {
@@ -66,6 +71,7 @@ const Account = {
         .catch(reject);
     }),
 
+    // Create account
     createViaFacebook: function(account) {
 
         if (!account.facebookId) {
@@ -107,6 +113,10 @@ const Account = {
         });
 
     },
+
+
+
+    // Get account
     getByEmail: (email, password) => new Promise((resolve, reject) => {
         collection.findOne({email: email})
         .then(account => {
@@ -124,7 +134,11 @@ const Account = {
             delete account.hashedPassword;
 
             return resolve(account);
-        });
+        })
+        .catch(err => {
+            console.log(err);
+            reject("internalServerError");
+        })
     }),
     getById: accountId => new Promise((resolve, reject) => {
         if (accountId.length === 12 || accountId.length === 24  ) {
@@ -138,6 +152,10 @@ const Account = {
                 delete account.hashedPassword;
 
                 return resolve(account);
+            })
+            .catch(err => {
+                console.error(err);
+                reject("internalServerError");
             });
         } else {
             return reject("invalidId");
@@ -171,6 +189,36 @@ const Account = {
         .catch(err => {
             console.error(err);
             reject("internalServerError");
+        });
+    }),
+
+    // Get token
+    getAccessTokenByRefresh: refreshToken => new Promise((resolve, reject) => {
+        jwt.verify(refreshToken, Config.security.secret, {
+            algorithms: [Config.security.hash]
+        }, (err, decoded) => {
+            if (err) {
+                return reject("corruptedToken")
+            } else {
+                if (decoded.tokenType === "refresh") {
+                    return resolve(decoded);
+                }
+                return reject("invalidToken")
+            }
+        });
+    }),
+    getAccessTokenByPasswordReset: passwordResetToken => new Promise((resolve, reject) => {
+        jwt.verify(passwordResetToken, Config.security.secret, {
+            algorithms: [Config.security.hash]
+        }, (err, decoded) => {
+            if (err) {
+                return reject("corruptedToken")
+            } else {
+                if (decoded.tokenType === "passwordReset") {
+                    return resolve(decoded);
+                }
+                return reject("invalidToken")
+            }
         });
     })
 };
