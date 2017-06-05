@@ -87,6 +87,9 @@ const Account = {
             collection.findOne({facebookId: account.facebookId})
             .then(result => {
                 if (result === null) {
+                    // Add salt, for if user would like to add a direct password to it's account in the future
+                    newAccount.salt = pass.getSalt();
+                    
                     // Insert newAccount in database
                     return collection.insert(newAccount).then(result => resolve(result));
                 }
@@ -107,6 +110,9 @@ const Account = {
             collection.findOne({googleId: account.googleId})
             .then(result => {
                 if (result === null) {
+                    // Add salt, for if user would like to add a direct password to it's account in the future
+                    newAccount.salt = pass.getSalt();
+
                     // Insert newAccount in database
                     return collection.insert(newAccount).then(result => resolve(result));
                 }
