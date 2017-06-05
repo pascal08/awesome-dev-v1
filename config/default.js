@@ -19,17 +19,15 @@ module.exports = {
         //Plain-text HTTP server configuration.
         http: {
             enabled: true,
-            host: "0.0.0.0",
             port: 3000
         },
 
         //Encrypted HTTP server configuration.
         https: {
             enabled: false,
-            host: "0.0.0.0",
             port: 3443,
-            key: null,
-            cert: null
+            key: null, // Store outside repo!
+            cert: null // Store outside repo!
         },
 
         path: {
@@ -68,13 +66,16 @@ module.exports = {
         refreshTokenLife: 1209600, // 14 days
         passwordResetTokenLife: 3600, // 1 hour
         hash: "HS256",
-
         facebook: {
             appId: null,
             appSecret: null,
             callbackURL: null
+        },
+        google: {
+            appId: null,
+            appSecret: null,
+            callbackURL: null
         }
-
     },
 
     /***************************************************************

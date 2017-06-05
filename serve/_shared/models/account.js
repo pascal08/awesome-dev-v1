@@ -14,23 +14,20 @@ const Account = {
     create: function(account) {
 
         const newAccount = _.merge({}, accountModel, account);
-        if (typeof newAccount.password !== "string") {
-            return new Promise((resolve, reject) => {
-                reject("incorrectPasswordProperty");
-            });
-        }
 
         return new Promise((resolve, reject) => {
             collection.findOne({email: account.email})
       .then(result => {
           if (result === null) {
               newAccount.salt = pass.getSalt();
-              newAccount.hashedPassword = pass.getHashedPass(newAccount.password, newAccount.salt);
 
-          // IMPORTANT: Remove unhashed password
-              delete newAccount.password;
+              if (typeof newAccount.password === "string") {
+                  newAccount.hashedPassword = pass.getHashedPass(newAccount.password, newAccount.salt);
+                  // IMPORTANT: Remove unhashed password
+                  delete newAccount.password;
+              }
+
               newAccount.created = moment.utc().unix();
-
           // Insert newAccount in database
               return collection.insert(newAccount).then(result => resolve(result));
           }
@@ -45,19 +42,24 @@ const Account = {
         Account.getById(accountId)
         .then(account => {
             const updatedAccount = _.merge({}, account, properties);
-            collection.update({_id: ObjectId(accountId)}, updatedAccount)
+
+            collection.update(
+                { _id: ObjectId(accountId)},
+                {$set: properties}
+            )
             .then(() => {
                 delete updatedAccount.salt;
                 delete updatedAccount.hashedPassword;
                 delete updatedAccount.passwordResetToken;
+
                 return resolve(updatedAccount)
             })
             .catch(err => {
                 return reject(err);
             })
-
         })
         .catch(reject);
+
     }),
     delete: accountId => new Promise((resolve, reject) => {
         Account.getById(accountId)
@@ -84,6 +86,9 @@ const Account = {
             collection.findOne({facebookId: account.facebookId})
             .then(result => {
                 if (result === null) {
+                    // Add salt, for if user would like to add a direct password to it's account in the future
+                    newAccount.salt = pass.getSalt();
+                    
                     // Insert newAccount in database
                     return collection.insert(newAccount).then(result => resolve(result));
                 }
@@ -104,6 +109,9 @@ const Account = {
             collection.findOne({googleId: account.googleId})
             .then(result => {
                 if (result === null) {
+                    // Add salt, for if user would like to add a direct password to it's account in the future
+                    newAccount.salt = pass.getSalt();
+
                     // Insert newAccount in database
                     return collection.insert(newAccount).then(result => resolve(result));
                 }
