@@ -14,23 +14,20 @@ const Account = {
     create: function(account) {
 
         const newAccount = _.merge({}, accountModel, account);
-        if (typeof newAccount.password !== "string") {
-            return new Promise((resolve, reject) => {
-                reject("incorrectPasswordProperty");
-            });
-        }
 
         return new Promise((resolve, reject) => {
             collection.findOne({email: account.email})
       .then(result => {
           if (result === null) {
               newAccount.salt = pass.getSalt();
-              newAccount.hashedPassword = pass.getHashedPass(newAccount.password, newAccount.salt);
 
-          // IMPORTANT: Remove unhashed password
-              delete newAccount.password;
+              if (typeof newAccount.password === "string") {
+                  newAccount.hashedPassword = pass.getHashedPass(newAccount.password, newAccount.salt);
+                  // IMPORTANT: Remove unhashed password
+                  delete newAccount.password;
+              }
+
               newAccount.created = moment.utc().unix();
-
           // Insert newAccount in database
               return collection.insert(newAccount).then(result => resolve(result));
           }
@@ -61,6 +58,8 @@ const Account = {
                 return reject(err);
             })
         })
+        .catch(reject);
+
     }),
     delete: accountId => new Promise((resolve, reject) => {
         Account.getById(accountId)

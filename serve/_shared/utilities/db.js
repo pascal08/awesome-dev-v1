@@ -3,6 +3,6 @@ const Config = require("config"),
 
 module.exports = monk(Config.mongodb.database, err => {
     if(err){
-        console.error("Not connected \r\n", err.message);
+        console.error("Not connected with Mongo database \r\n", err.message);
     }
 });

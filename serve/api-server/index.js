@@ -6,10 +6,16 @@ const app       = require("express")(),
     passport    = require("passport"),
     Config      = require("config"),
     routes      = require("./routes"),
+    fs          = require("fs"),
+    https       = require("https"),
     bodyParser  = require("body-parser"),
     session     = require("express-session"),
     Account     = requireShared("models/account"),
     db          = requireShared("utilities/db");
+
+/***************************************************
+    Passport cofiguration
+***************************************************/
 
 passport.serializeUser((user, cb) => {
     cb(null, user._id)
@@ -35,8 +41,18 @@ if (Config.security.facebook && Config.security.facebook.clientID) {
 if (Config.security.google && Config.security.google.clientID) {
     passport.use(requireApi("/passport-strategies/google").strategy);
 }
+app.use(passport.initialize())
+app.use(passport.session())
 
-// Add Cors headers
+
+
+
+
+
+/***************************************************
+    Cors cofiguration
+***************************************************/
+
 app.use((req, res, next) => {
     if (Config["api-server"].cors.acceptAll === true) {
         res.header("Access-Control-Allow-Origin", "*");
@@ -56,6 +72,7 @@ app.use((req, res, next) => {
     return next();
 });
 
+
 app.use((req, res, next) => {
     req.db = db;
     req.passport = passport
@@ -71,12 +88,8 @@ app.use(session({
     saveUninitialized: true
 }));
 
-app.use(passport.initialize())
-app.use(passport.session())
 
-// to support JSON-encoded bodies
 app.use(bodyParser.json());
-// to support URL-encoded bodies
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -85,7 +98,22 @@ app.use(bodyParser.urlencoded({
 routes(app);
 
 
-app.listen(Config["api-server"].http.port);
-console.log(`${Config["api-server"].http.port} is the magic port`);
+
+if (Config["api-server"].https.enabled) {
+    const privateKey = fs.readFileSync( Config["api-server"].https.key );
+    const certificate = fs.readFileSync( Config["api-server"].https.cert );
+
+    https.createServer({
+        key: privateKey,
+        cert: certificate
+    }, app).listen(Config["api-server"].https.port);
+
+    console.log(`HTTPS server running on port ${Config["api-server"].https.port}`);
+}
+
+if (Config["api-server"].http.enabled) {
+    app.listen(Config["api-server"].http.port);
+    console.log(`HTTP server running on port ${Config["api-server"].http.port}`);
+}
 
 module.exports = app;
