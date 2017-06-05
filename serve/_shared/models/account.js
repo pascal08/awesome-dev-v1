@@ -45,19 +45,22 @@ const Account = {
         Account.getById(accountId)
         .then(account => {
             const updatedAccount = _.merge({}, account, properties);
-            collection.update({_id: ObjectId(accountId)}, updatedAccount)
+
+            collection.update(
+                { _id: ObjectId(accountId)},
+                {$set: properties}
+            )
             .then(() => {
                 delete updatedAccount.salt;
                 delete updatedAccount.hashedPassword;
                 delete updatedAccount.passwordResetToken;
+
                 return resolve(updatedAccount)
             })
             .catch(err => {
                 return reject(err);
             })
-
         })
-        .catch(reject);
     }),
     delete: accountId => new Promise((resolve, reject) => {
         Account.getById(accountId)
