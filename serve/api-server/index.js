@@ -56,17 +56,22 @@ app.use(passport.session())
 app.use((req, res, next) => {
     if (Config["api-server"].cors.acceptAll === true) {
         res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
         res.header("Access-Control-Allow-Headers", `Origin, X-Requested-With, Authorization, Content-Type, Options, Accept`);
 
         return next();
     }
 
-    if (Config["api-server"].cors["Access-Control-Allow-Origin"]) {
-        res.header("Access-Control-Allow-Origin", Config["api-server"].cors["Access-Control-Allow-Origin"]);
+    if (Config["api-server"].cors.origin) {
+        res.header("Access-Control-Allow-Origin", Config["api-server"].cors.origin);
     }
 
-    if (Config["api-server"].cors["Access-Control-Allow-Headers"]) {
-        res.header("Access-Control-Allow-Headers", Config["api-server"].cors["Access-Control-Allow-Headers"]);
+    if (Config["api-server"].cors.methods) {
+        res.header("Access-Control-Allow-Headers", Config["api-server"].cors.methods);
+    }
+
+    if (Config["api-server"].cors.headers) {
+        res.header("Access-Control-Allow-Headers", Config["api-server"].cors.headers);
     }
 
     return next();

@@ -12,8 +12,9 @@ module.exports = {
 
         cors: {
             acceptAll: false, // Noob way, ignores "Access-Control-Allow-Origin" & "Access-Control-Allow-Headers" values
-            "Access-Control-Allow-Origin": null,
-            "Access-Control-Allow-Headers": null
+            origin: null,
+            methods: null,
+            headers: null
         },
 
         //Plain-text HTTP server configuration.
