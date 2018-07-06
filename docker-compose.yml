@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+
+  node:
+    build:
+      context: .
+      target: dev
+      dockerfile: node.dockerfile
+    volumes:
+      - .:/node/api-server
+    ports:
+      - 3000:3000
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
