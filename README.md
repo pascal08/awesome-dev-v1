@@ -20,6 +20,11 @@ Set a secret key (used for signing the JWT):
 
 `security.secret = "randomstringofcharacters"`
 
+---------------------
+
+## Development environment
+
+Install docker and docker-compose. Start your development environment with the command `docker-compose up -d`. This will start a node server and a mongodb server. 
 
 ---------------------
 
