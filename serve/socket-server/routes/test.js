@@ -1,6 +1,7 @@
 "use strict";
 
 module.exports = app => {
+    const roomHelper   = requireSocket("utilities/room")(app);
 
     // To self
     app.route("toSelf", socket => {
@@ -17,14 +18,19 @@ module.exports = app => {
         app.namespace.emit("toEveryone.success", socket.body);
     });
 
+    // Get list of users
+    app.route("getUserlist", (socket, res) => {
+        socket.emit("getUserlist.success", res.users);
+    });
+
     // To everyone (within the same room)
-    app.route("toEveryoneInRoom", socket => {
-        app.namespace.in(socket.body).emit("toEveryoneInRoom.success", `Sending message to everyone in room ${socket.body}`);
+    app.route("toEveryoneInRoom", (socket, res) => {
+        roomHelper.namespace("toEveryoneInRoom.success",socket.body);
     });
 
     // To others (within the same room)
     app.route("toOthersInRoom", (socket, res) => {
-        socket.broadcast.in(res.room).emit("toOthersInRoom.success",socket.body);
+        roomHelper.broadcast("toOthersInRoom.success",socket.body);
     });
 
     return app;
